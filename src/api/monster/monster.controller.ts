@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express"
 import Monster, { IMonster } from "./monster.model"
 import { Tcreate } from "./monster.schema"
 
-export const getAll = async (req: Request, res: Response<{ monsters: Partial<IMonster[]> }>, next: NextFunction) => {
+export const getAll = async (req: Request, res: Response<Partial<IMonster[]>>, next: NextFunction) => {
     try {
-        const foundMonsters = await Monster.find()
+        const foundMonsters = await Monster.find().populate('items')
         if(!foundMonsters) return res.status(404)
-        return res.status(200).json({ monsters: foundMonsters })
+        return res.status(200).json(foundMonsters)
     } catch(err) {
         next(err)
     }
@@ -32,7 +32,7 @@ export const createMonster = async (req: Request<{}, {}, Tcreate>, res: Response
         })
         console.log(newMonster)
 
-        return res.status(200)
+        res.status(200)
 
     } catch (err) {
         next(err)
