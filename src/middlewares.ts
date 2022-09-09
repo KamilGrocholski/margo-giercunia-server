@@ -1,7 +1,39 @@
 import { NextFunction, Request, Response } from 'express'
 import { AnyZodObject, ZodError } from "zod"
+import jwt from 'jsonwebtoken'
 
 import ErrorResponse from './interfaces/ErrorResponse'
+import allowedOrigins from './config/allowedOrigins';
+
+export const validateAccessToken = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('xd1')
+    const accessToken = req.headers.authorization?.split(' ')[1]
+    console.log(accessToken)
+    console.log('xd2')
+    if (!accessToken) {
+      return res.sendStatus(401)
+    }
+    console.log('xd3')
+    if (accessToken.toLowerCase().startsWith('bearer')) {
+      accessToken.slice('bearer'.length).trim()
+    }
+    console.log('xd4')
+    
+    const decodedAccessToken = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET as string
+    ) as { username: string }
+      console.log('xd5')
+    req.body = {
+      username: decodedAccessToken.username
+    }
+    console.log(decodedAccessToken)
+    next()
+  } catch (err) {
+    return res.sendStatus(500)
+  }
+}
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
   res.status(404)

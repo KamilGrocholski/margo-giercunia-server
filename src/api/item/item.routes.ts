@@ -7,6 +7,5 @@ const router = Router()
 
 router.route('/').get(ItemController.getAll)
 router.route('/').post(validateRequest({ body: ItemSchema.create }), ItemController.createItem)
-router.route('/random').get(ItemController.getRandomItems)
 
 export default router

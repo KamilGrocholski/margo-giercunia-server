@@ -4,15 +4,15 @@ import { Tcreate } from "./monster.schema"
 
 export const getAll = async (req: Request, res: Response<Partial<IMonster[]>>, next: NextFunction) => {
     try {
-        const foundMonsters = await Monster.find().populate('items')
-        if(!foundMonsters) return res.status(404)
+        const foundMonsters = await Monster.find().populate('items').sort({ 'lvl': 1 })
+        if(!foundMonsters) return res.sendStatus(404)
         return res.status(200).json(foundMonsters)
     } catch(err) {
         next(err)
     }
 }
 
-export const createMonster = async (req: Request<{}, {}, Tcreate>, res: Response, next: NextFunction) => {
+export const createMonster = async (req: Request<{}, {}, Tcreate>, res: Response<IMonster>, next: NextFunction) => {
     try {
         const {
             name,
@@ -22,7 +22,7 @@ export const createMonster = async (req: Request<{}, {}, Tcreate>, res: Response
         } = req.body
 
         const foundMonster = await Monster.findOne({ name })
-        if (foundMonster) return res.status(401)
+        if (foundMonster) return res.sendStatus(401)
 
         const newMonster = await Monster.create({
             name,
@@ -32,7 +32,7 @@ export const createMonster = async (req: Request<{}, {}, Tcreate>, res: Response
         })
         console.log(newMonster)
 
-        res.status(200)
+        return res.status(200).json(newMonster)
 
     } catch (err) {
         next(err)

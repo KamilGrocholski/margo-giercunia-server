@@ -1,11 +1,12 @@
 import { Router } from 'express'
-import { validateRequest } from '../../middlewares'
 import * as UserController from './user.controller'
-import * as UserSchema from './user.schema'
 
 const router = Router()
 
-router.get('/', UserController.getAll)
-router.get('/:username', validateRequest({ params: UserSchema.getOneByName }), UserController.getOneByName)
+router.route('/register').post(UserController.register)
+router.route('/login').post(UserController.login)
+router.route('/refresh').get(UserController.refresh)
+router.route('/logout').get(UserController.logout)
+router.route('/byMonstersKills').get(UserController.getUsersByMonstersKills)
 
 export default router
