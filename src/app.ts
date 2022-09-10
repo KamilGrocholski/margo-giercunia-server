@@ -14,7 +14,7 @@ const app = express()
 
 app.use(morgan('dev'))
 app.use(helmet())
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+app.use(cors({ credentials: true, origin: ['http://localhost:3000', process.env.CLIENT_URL as string] }))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser())
