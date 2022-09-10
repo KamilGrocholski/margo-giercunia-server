@@ -7,6 +7,8 @@ declare global {
         REFRESH_TOKEN_SECRET: string;
         PORT?: string;
         PWD: string;
+        CLIENT_URL: string;
+        LOCALHOST_CLIENT: string;
       }
     }
   }
